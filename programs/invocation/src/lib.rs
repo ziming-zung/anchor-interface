@@ -55,6 +55,8 @@ pub struct PullStrings<'info> {
 pub struct SetDataParams {
     pub data: u64,
 }
+
+// TODO hash by 2 string
 impl anchor_lang::Discriminator for SetDataParams {
     const DISCRIMINATOR: [u8; 8] = [223, 114, 91, 136, 197, 78, 153, 153];
 }

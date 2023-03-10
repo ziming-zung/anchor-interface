@@ -1,0 +1,10 @@
+[workspace]
+members = [
+    "programs/*"
+]
+# exclude = [
+#     "programs/puppet-0",
+#     "programs/puppet-1",
+#     "programs/puppet-master",
+#     "programs/test-interface",
+# ]

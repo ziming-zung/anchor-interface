@@ -1,0 +1,20 @@
+[package]
+name = "implementation-0"
+version = "0.1.0"
+description = "Created with Anchor"
+rust-version = "1.60"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "implementation_0"
+
+[features]
+no-entrypoint = []
+cpi = ["no-entrypoint"]
+
+[dependencies]
+anchor-lang = { git="https://github.com/coral-xyz/anchor.git", tag = "v0.27.0", features = ["init-if-needed"] }
+# anchor-lang = { path = "../../../anchor/lang"}
+# anchor-lang = "0.24.2"
+# invocation = {path="../invocation"}

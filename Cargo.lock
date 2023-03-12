@@ -735,6 +735,7 @@ name = "implementation-0"
 version = "0.1.0"
 dependencies = [
  "anchor-lang",
+ "invocation",
 ]
 
 [[package]]
@@ -742,6 +743,7 @@ name = "implementation-1"
 version = "0.1.0"
 dependencies = [
  "anchor-lang",
+ "invocation",
 ]
 
 [[package]]

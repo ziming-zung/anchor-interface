@@ -1,13 +1,13 @@
 use anchor_lang::prelude::*;
 // use invocation::interface_instuction::*;
 
-
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
 #[program]
 pub mod implementation_0 {
-    
+
     use super::*;
+    use anchor_lang::solana_program::program::set_return_data;
 
     pub fn initialize(_ctx: Context<Initialize>) -> Result<()> {
         Ok(())
@@ -17,10 +17,15 @@ pub mod implementation_0 {
         let account = &mut ctx.accounts.account;
         anchor_lang::solana_program::log::sol_log("implementation_0");
         account.data = data;
+
+        let return_data = ReturnData {
+            data: "result from implementation_0".to_string(),
+        };
+        set_return_data(&return_data.try_to_vec()?);
+        anchor_lang::solana_program::log::sol_log("set_return_data successful");
         Ok(())
     }
 }
-
 
 // TODO extract struct to file/other lib
 #[derive(Accounts)]
@@ -41,4 +46,10 @@ pub struct SetData<'info> {
 #[account]
 pub struct Data {
     pub data: u64,
+}
+
+/// why can't import struct from other crate
+#[derive(AnchorSerialize, AnchorDeserialize, Debug)]
+pub struct ReturnData {
+    pub data: String,
 }

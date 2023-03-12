@@ -1,14 +1,18 @@
 // #region core
 use anchor_lang::prelude::*;
-// pub mod interface_instuction;
+pub mod interface_instuction;
+pub mod primitives;
+
 declare_id!("65t8LH4Yp8ugymLYGYAeuQRJNJoqshkByEWJJktgpoUa");
 
 #[program]
 mod invocation {
 
+    use anchor_lang::solana_program::{log::sol_log, program::get_return_data};
+
     use super::*;
     pub fn invoke(ctx: Context<PullStrings>) -> anchor_lang::Result<()> {
-        anchor_lang::solana_program::log::sol_log("invoke..");
+        sol_log("invoke..");
 
         let data: u64 = 111;
         let mut data = SetDataParams { data }.try_to_vec()?;
@@ -24,11 +28,17 @@ mod invocation {
             accounts,
             data: ix_data,
         };
-        anchor_lang::solana_program::program::invoke_unchecked(
+        anchor_lang::solana_program::program::invoke(
             &instruction,
             &[ctx.accounts.signer.to_account_info()],
-        )
-        .map_err(|e| e.into())
+        )?;
+        if let Some((actual_program_id, data)) = get_return_data() {
+            sol_log(format!("actual_program_id:{}", actual_program_id).as_str());
+            let mut data = data.as_slice();
+            let return_data = primitives::ReturnData::deserialize(&mut data)?;
+            sol_log(format!("get_return_data:{:?}", return_data).as_str());
+        }
+        Ok(())
     }
 }
 

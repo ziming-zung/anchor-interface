@@ -10,7 +10,7 @@ describe("basic-3", () => {
 
   it("Performs CPI from puppet master to puppet", async () => {
     const invocation = anchor.workspace.Invocation;
-    const implementation = anchor.workspace.Implementation1;
+    const implementation = anchor.workspace.Implementation0;
     // const implementation = anchor.workspace.Implementation1;
     
     // Initialize a new puppet account.

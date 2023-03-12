@@ -21,7 +21,20 @@ mod invocation {
             ctx.accounts.signer.to_account_info().key(),
             false,
         ));
-        let mut ix_data = <SetDataParams as anchor_lang::Discriminator>::discriminator().to_vec();
+
+      let discriminator =  {
+            // how to gen discriminator
+            let mut sighash = [0u8; 8];
+            let preimage = b"global:set_data";
+            sighash.copy_from_slice(
+                &anchor_lang::solana_program::hash::hash(preimage).to_bytes()[..8],
+            );
+            // the value of sighash is discriminator
+            sol_log(format!("sighash:{:?}", sighash).as_str());
+            sighash.to_vec()
+        };
+        // let mut ix_data = <SetDataParams as anchor_lang::Discriminator>::discriminator().to_vec();
+        let mut ix_data = discriminator;
         ix_data.append(&mut data);
         let instruction = anchor_lang::solana_program::instruction::Instruction {
             program_id: ctx.accounts.program_id.key(),

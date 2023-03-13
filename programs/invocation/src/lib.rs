@@ -8,9 +8,16 @@ declare_id!("65t8LH4Yp8ugymLYGYAeuQRJNJoqshkByEWJJktgpoUa");
 #[program]
 mod invocation {
 
+    use super::*;
     use anchor_lang::solana_program::{log::sol_log, program::get_return_data};
 
-    use super::*;
+    pub fn address_lookup(ctx: Context<MyAddresses>) -> anchor_lang::Result<()> {
+        sol_log("address_lookup..");        
+        sol_log(format!("accounts: {:?}", ctx.accounts).as_str());
+        sol_log(format!("remaining: {:?}",ctx.remaining_accounts).as_str());
+        Ok(())
+    }
+
     pub fn invoke(ctx: Context<PullStrings>) -> anchor_lang::Result<()> {
         sol_log("invoke..");
 
@@ -22,7 +29,7 @@ mod invocation {
             false,
         ));
 
-      let discriminator =  {
+        let discriminator = {
             // how to gen discriminator
             let mut sighash = [0u8; 8];
             let preimage = b"global:set_data";
@@ -61,6 +68,16 @@ pub struct PullStrings<'info> {
     pub signer: Signer<'info>,
     /// CHECK: just a program_id
     pub program_id: UncheckedAccount<'info>,
+}
+
+#[derive(Accounts, Debug)]
+pub struct MyAddresses<'info> {
+    #[account(mut)]
+    pub signer: Signer<'info>,
+    /// CHECK
+    pub account_0: AccountInfo<'info>,
+    /// CHECK
+    pub account_1: AccountInfo<'info>,
 }
 
 // #[derive(Clone)]

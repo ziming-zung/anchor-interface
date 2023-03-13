@@ -13,7 +13,7 @@ describe("basic-3", () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(provider);
 
-  it("address loopup", async () => {
+  it("address lookup table", async () => {
     const invocation = anchor.workspace.Invocation;
     const newAccount0 = anchor.web3.Keypair.generate();
     const newAccount1 = anchor.web3.Keypair.generate();
@@ -47,7 +47,7 @@ describe("basic-3", () => {
     
     for (let i = 0; i < lookupTableAccount.state.addresses.length; i++) {
       const address = lookupTableAccount.state.addresses[i];
-      console.log(i, address.toBase58());
+      console.log("address index:", i, address.toBase58());
     }
 
     const instruction = await invocation.methods.addressLookup().accounts({
@@ -55,7 +55,7 @@ describe("basic-3", () => {
       account1: newAccount1.publicKey
     }).instruction();    
 
-    let createAccountTxWithLookupTable = new VersionedTransaction(
+    let txWithLookupTable = new VersionedTransaction(
       new TransactionMessage({
         instructions: [instruction],
         payerKey: provider.publicKey,
@@ -64,7 +64,7 @@ describe("basic-3", () => {
       }).compileToV0Message([lookupTableAccount])
     );
 
-    let createAccountTxWithoutLookupTable = new VersionedTransaction(
+    let txWithoutLookupTable = new VersionedTransaction(
       new TransactionMessage({
         instructions: [instruction],
         payerKey: provider.publicKey,
@@ -73,14 +73,15 @@ describe("basic-3", () => {
       }).compileToV0Message()
     );
 
+    // must delay/sleep
     // see: https://solana.stackexchange.com/questions/2896/what-does-transaction-address-table-lookup-uses-an-invalid-index-mean
     await delay(2000);
     
 
-    console.log('Transaction size without address lookup table: ', createAccountTxWithoutLookupTable.serialize().length, 'bytes');
-    console.log('Transaction size with address lookup table:    ', createAccountTxWithLookupTable.serialize().length, 'bytes');
+    console.log('Transaction size without address lookup table: ', txWithoutLookupTable.serialize().length, 'bytes');
+    console.log('Transaction size with address lookup table:    ', txWithLookupTable.serialize().length, 'bytes');
 
-    await provider.sendAndConfirm(createAccountTxWithLookupTable, [], {
+    await provider.sendAndConfirm(txWithLookupTable, [], {
       skipPreflight: false,
       commitment: "confirmed",
     });

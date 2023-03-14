@@ -35,6 +35,11 @@ pub struct Initialize<'info> {
 pub struct SetData<'info> {
     #[account(mut)]
     pub account: Account<'info, Data>,
+
+    #[account(mut)]
+    pub payer: Signer<'info>,
+
+    pub endpoint: Signer<'info>,
 }
 
 #[account]

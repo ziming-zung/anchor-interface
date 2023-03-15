@@ -13,79 +13,79 @@ describe("basic-3", () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(provider);
 
-  // it("address lookup table", async () => {
-  //   const invocation = anchor.workspace.Invocation;
-  //   const newAccount0 = anchor.web3.Keypair.generate();
-  //   const newAccount1 = anchor.web3.Keypair.generate();
-  //   console.log("balance:", await provider.connection.getBalance(provider.publicKey));
+  it("address lookup table", async () => {
+    const invocation = anchor.workspace.Invocation;
+    const newAccount0 = anchor.web3.Keypair.generate();
+    const newAccount1 = anchor.web3.Keypair.generate();
+    console.log("balance:", await provider.connection.getBalance(provider.publicKey));
 
-  //   const slot = await provider.connection.getSlot('finalized')
+    const slot = await provider.connection.getSlot('finalized')
 
-  //   const [loookupTableInstruction, lookupTableAddress] = AddressLookupTableProgram.createLookupTable({
-  //     authority: provider.publicKey,
-  //     payer: provider.publicKey,
-  //     recentSlot: slot,
-  //   });
+    const [loookupTableInstruction, lookupTableAddress] = AddressLookupTableProgram.createLookupTable({
+      authority: provider.publicKey,
+      payer: provider.publicKey,
+      recentSlot: slot,
+    });
 
-  //   const extendInstruction = AddressLookupTableProgram.extendLookupTable({
-  //     payer: provider.publicKey,
-  //     authority: provider.publicKey,
-  //     lookupTable: lookupTableAddress,
-  //     addresses: [newAccount0.publicKey, newAccount1.publicKey],
-  //   });
+    const extendInstruction = AddressLookupTableProgram.extendLookupTable({
+      payer: provider.publicKey,
+      authority: provider.publicKey,
+      lookupTable: lookupTableAddress,
+      addresses: [newAccount0.publicKey, newAccount1.publicKey],
+    });
 
-  //   let createLookupTableTx = new Transaction();
-  //   createLookupTableTx.add(loookupTableInstruction);
-  //   createLookupTableTx.add(extendInstruction);
+    let createLookupTableTx = new Transaction();
+    createLookupTableTx.add(loookupTableInstruction);
+    createLookupTableTx.add(extendInstruction);
 
-  //   console.log("lookup table address:", lookupTableAddress.toBase58());
-  //   await provider.sendAndConfirm(createLookupTableTx, []);
+    console.log("lookup table address:", lookupTableAddress.toBase58());
+    await provider.sendAndConfirm(createLookupTableTx, []);
 
-  //   const lookupTableAccount = await provider.connection
-  //     .getAddressLookupTable(lookupTableAddress)
-  //     .then((res) => res.value);
+    const lookupTableAccount = await provider.connection
+      .getAddressLookupTable(lookupTableAddress)
+      .then((res) => res.value);
 
-  //   for (let i = 0; i < lookupTableAccount.state.addresses.length; i++) {
-  //     const address = lookupTableAccount.state.addresses[i];
-  //     console.log("address index:", i, address.toBase58());
-  //   }
+    for (let i = 0; i < lookupTableAccount.state.addresses.length; i++) {
+      const address = lookupTableAccount.state.addresses[i];
+      console.log("address index:", i, address.toBase58());
+    }
 
-  //   const instruction = await invocation.methods.addressLookup().accounts({
-  //     account0: newAccount0.publicKey,
-  //     account1: newAccount1.publicKey
-  //   }).instruction();
+    const instruction = await invocation.methods.addressLookup().accounts({
+      account0: newAccount0.publicKey,
+      account1: newAccount1.publicKey
+    }).instruction();
 
-  //   let txWithLookupTable = new VersionedTransaction(
-  //     new TransactionMessage({
-  //       instructions: [instruction],
-  //       payerKey: provider.publicKey,
-  //       recentBlockhash: (await provider.connection.getLatestBlockhash())
-  //         .blockhash,
-  //     }).compileToV0Message([lookupTableAccount])
-  //   );
+    let txWithLookupTable = new VersionedTransaction(
+      new TransactionMessage({
+        instructions: [instruction],
+        payerKey: provider.publicKey,
+        recentBlockhash: (await provider.connection.getLatestBlockhash())
+          .blockhash,
+      }).compileToV0Message([lookupTableAccount])
+    );
 
-  //   let txWithoutLookupTable = new VersionedTransaction(
-  //     new TransactionMessage({
-  //       instructions: [instruction],
-  //       payerKey: provider.publicKey,
-  //       recentBlockhash: (await provider.connection.getLatestBlockhash())
-  //         .blockhash,
-  //     }).compileToV0Message()
-  //   );
+    let txWithoutLookupTable = new VersionedTransaction(
+      new TransactionMessage({
+        instructions: [instruction],
+        payerKey: provider.publicKey,
+        recentBlockhash: (await provider.connection.getLatestBlockhash())
+          .blockhash,
+      }).compileToV0Message()
+    );
 
-  //   // must delay/sleep
-  //   // see: https://solana.stackexchange.com/questions/2896/what-does-transaction-address-table-lookup-uses-an-invalid-index-mean
-  //   await delay(2000);
+    // must delay/sleep
+    // see: https://solana.stackexchange.com/questions/2896/what-does-transaction-address-table-lookup-uses-an-invalid-index-mean
+    await delay(2000);
 
 
-  //   console.log('Transaction size without address lookup table: ', txWithoutLookupTable.serialize().length, 'bytes');
-  //   console.log('Transaction size with address lookup table:    ', txWithLookupTable.serialize().length, 'bytes');
+    console.log('Transaction size without address lookup table: ', txWithoutLookupTable.serialize().length, 'bytes');
+    console.log('Transaction size with address lookup table:    ', txWithLookupTable.serialize().length, 'bytes');
 
-  //   await provider.sendAndConfirm(txWithLookupTable, [], {
-  //     skipPreflight: false,
-  //     commitment: "confirmed",
-  //   });
-  // })
+    await provider.sendAndConfirm(txWithLookupTable, [], {
+      skipPreflight: false,
+      commitment: "confirmed",
+    });
+  })
 
   it("Performs CPI from puppet master to puppet", async () => {
     const invocation = anchor.workspace.Invocation;
@@ -99,8 +99,8 @@ describe("basic-3", () => {
     // {
     //   let signature = await provider.connection.requestAirdrop(newAccount.publicKey, 50 * LAMPORTS_PER_SOL);
     //   await provider.connection.confirmTransaction(signature);
-      let signature = await provider.connection.requestAirdrop(newAccount2.publicKey, 50 * LAMPORTS_PER_SOL);
-      await provider.connection.confirmTransaction(signature);
+    let signature = await provider.connection.requestAirdrop(newAccount2.publicKey, 50 * LAMPORTS_PER_SOL);
+    await provider.connection.confirmTransaction(signature);
     //   signature = await provider.connection.requestAirdrop(newAccount3.publicKey, 50 * LAMPORTS_PER_SOL);
     //   await provider.connection.confirmTransaction(signature);
     // }
@@ -130,17 +130,17 @@ describe("basic-3", () => {
         systemProgram: SystemProgram.programId,
       })
       .signers([newAccount3])
-      .rpc();    
+      .rpc();
 
     await invocation.methods
       .invoke()
       .accounts({
         signer: newAccount.publicKey,
         payer: newAccount2.publicKey,
-        implementationId: implementation.programId,
         cpiSigner: endpoint,
       })
       .remainingAccounts([
+        { pubkey: implementation.programId, isSigner: false, isWritable: false }, // program
         { pubkey: newAccount3.publicKey, isSigner: false, isWritable: true }, // account
         { pubkey: newAccount2.publicKey, isSigner: true, isWritable: true }, // payer
         { pubkey: endpoint, isSigner: false, isWritable: false }, // endpoint

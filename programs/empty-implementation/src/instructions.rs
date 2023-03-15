@@ -9,13 +9,29 @@ pub struct Initialize<'info> {
     pub system_program: Program<'info, System>,
 }
 
-#[derive(Accounts, AnchorSerialize)]
-pub struct SetData<'info> {
-    #[account(mut)]
-    pub account: Account<'info, Data>,
-}
-
 #[account]
 pub struct Data {
     pub data: u64,
+}
+
+#[derive(Accounts)]
+pub struct SetData<'info> {
+    #[account(mut)]
+    pub account: Account<'info, Data>,
+
+    #[account(mut)]
+    pub payer: Signer<'info>,
+
+    pub endpoint: Signer<'info>,
+}
+
+#[derive(Clone, AnchorSerialize, AnchorDeserialize)]
+pub struct SetDataParams {
+    pub data: u64,
+    pub test: String,
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize, Debug, Default)]
+pub struct ReturnData {
+    pub data: String,
 }

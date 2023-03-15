@@ -17,4 +17,3 @@ cpi = ["no-entrypoint"]
 anchor-lang = { git="https://github.com/coral-xyz/anchor.git", tag = "v0.27.0", features = ["init-if-needed"] }
 # anchor-lang = { path = "../../../anchor/lang"}
 # anchor-lang = "0.24.2"
-invocation = {path="../invocation"}

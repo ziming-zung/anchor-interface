@@ -96,14 +96,10 @@ describe("basic-3", () => {
     const newAccount = anchor.web3.Keypair.generate();
     const newAccount2 = anchor.web3.Keypair.generate();
     const newAccount3 = anchor.web3.Keypair.generate();
-    // {
-    //   let signature = await provider.connection.requestAirdrop(newAccount.publicKey, 50 * LAMPORTS_PER_SOL);
-    //   await provider.connection.confirmTransaction(signature);
+    
     let signature = await provider.connection.requestAirdrop(newAccount2.publicKey, 50 * LAMPORTS_PER_SOL);
     await provider.connection.confirmTransaction(signature);
-    //   signature = await provider.connection.requestAirdrop(newAccount3.publicKey, 50 * LAMPORTS_PER_SOL);
-    //   await provider.connection.confirmTransaction(signature);
-    // }
+    
     console.log(newAccount.publicKey, newAccount2.publicKey, newAccount3.publicKey);
 
     let endpoint = anchor.web3.PublicKey.createProgramAddressSync(
@@ -138,9 +134,10 @@ describe("basic-3", () => {
         signer: newAccount.publicKey,
         payer: newAccount2.publicKey,
         cpiSigner: endpoint,
+        implementationId: implementation.programId,
       })
       .remainingAccounts([
-        { pubkey: implementation.programId, isSigner: false, isWritable: false }, // program
+        // { pubkey: implementation.programId, isSigner: false, isWritable: false }, // program
         { pubkey: newAccount3.publicKey, isSigner: false, isWritable: true }, // account
         { pubkey: newAccount2.publicKey, isSigner: true, isWritable: true }, // payer
         { pubkey: endpoint, isSigner: false, isWritable: false }, // endpoint
